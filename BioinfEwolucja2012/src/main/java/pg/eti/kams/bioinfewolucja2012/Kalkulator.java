@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
@@ -20,42 +19,47 @@ public class Kalkulator {
 
     private final List<Symbol> symbole = new ArrayList<Symbol>();
     private final Map<Symbol, Integer> reverse = new HashMap<Symbol, Integer>();
-    private final DoubleMatrix A = new DoubleMatrix();
+    private final DoubleMatrix R = new DoubleMatrix();
 
-    public Kalkulator() {
-    }
-
-    public void wczytajDane() {
-        symbole.clear();
-        reverse.clear();
-
-        Scanner scanner = new Scanner(System.in);
-        int i = 0;
-
-        for (String s : scanner.nextLine().split(" ")) {
-            Symbol symbol = new Symbol(s);
-            symbole.add(symbol);
-            reverse.put(symbol, i);
-            i++;
+    public Kalkulator(List<Symbol> symbole, double[][] prawdopodobienstwa) {
+        for (Symbol symbol : symbole) {
+            dodajSymbol(symbol);
         }
 
-        A.resize(symbole.size(), symbole.size());
+        R.resize(this.symbole.size(), this.symbole.size());
 
-        for (int j = 0; j < symbole.size(); j++) {
-            for (int k = 0; k < symbole.size(); k++) {
-                A.put(new int[]{j}, k, scanner.nextDouble());
+        for (int i = 0; i < prawdopodobienstwa.length; i++) {
+            for (int j = 0; j < prawdopodobienstwa[i].length; j++) {
+                R.put(new int[]{i}, j, prawdopodobienstwa[i][j]);
             }
         }
 
-        obliczPrawdopodobienstwaWystapieniaSymboli();
+        obliczPrawdopodobienstwoSymboli();
+
+        for (Symbol symbol : symbole) {
+            System.out.println(symbol.getPrawdopodobienstwo());
+        }
     }
 
-    /**
-     * TODO: obliczyć prawdopodobieństwa na podstawie dowolnego wiersza/kolumny
-     * eA.
-     */
-    private void obliczPrawdopodobienstwaWystapieniaSymboli() {
-        DoubleMatrix eA = MatrixFunctions.expm(A);
-        System.out.println(eA);
+    private void dodajSymbol(Symbol symbol) {
+        if (!reverse.containsKey(symbol)) {
+            int n = symbole.size();
+            symbole.add(symbol);
+            reverse.put(symbol, n);
+        }
+    }
+
+    private void obliczPrawdopodobienstwoSymboli() {
+        DoubleMatrix eR = MatrixFunctions.expm(R);
+        DoubleMatrix column = eR.getColumn(0);
+
+        double suma = 0;
+        for (double d : column.data) {
+            suma += d;
+        }
+
+        for (int i = 0; i < column.data.length; i++) {
+            symbole.get(i).setPrawdopodobienstwo(column.data[i] / suma);
+        }
     }
 }

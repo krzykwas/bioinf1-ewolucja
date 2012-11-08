@@ -11,7 +11,11 @@ package pg.eti.kams.bioinfewolucja2012;
 public class Symbol {
 
     private String symbol;
-    private double prawdopodobienstwoWystapienia;
+    /**
+     * Prawdopodobieństwo wystąpienia tego symbolu w tekście obliczane za pomocą
+     * eksponenty macierzy szybkości zmian.
+     */
+    private double prawdopodobienstwo;
 
     public Symbol() {
     }
@@ -28,19 +32,19 @@ public class Symbol {
         this.symbol = symbol;
     }
 
-    public double getPrawdopodobienstwoWystapienia() {
-        return prawdopodobienstwoWystapienia;
+    public double getPrawdopodobienstwo() {
+        return prawdopodobienstwo;
     }
 
-    public void setPrawdopodobienstwoWystapienia(double prawdopodobienstwoWystapienia) {
-        this.prawdopodobienstwoWystapienia = prawdopodobienstwoWystapienia;
+    public void setPrawdopodobienstwo(double prawdopodobienstwo) {
+        this.prawdopodobienstwo = prawdopodobienstwo;
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 67 * hash + (this.symbol != null ? this.symbol.hashCode() : 0);
-        hash = 67 * hash + (int) (Double.doubleToLongBits(this.prawdopodobienstwoWystapienia) ^ (Double.doubleToLongBits(this.prawdopodobienstwoWystapienia) >>> 32));
+        hash = 67 * hash + (int) (Double.doubleToLongBits(this.prawdopodobienstwo) ^ (Double.doubleToLongBits(this.prawdopodobienstwo) >>> 32));
         return hash;
     }
 
@@ -56,7 +60,7 @@ public class Symbol {
         if ((this.symbol == null) ? (other.symbol != null) : !this.symbol.equals(other.symbol)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.prawdopodobienstwoWystapienia) != Double.doubleToLongBits(other.prawdopodobienstwoWystapienia)) {
+        if (Double.doubleToLongBits(this.prawdopodobienstwo) != Double.doubleToLongBits(other.prawdopodobienstwo)) {
             return false;
         }
         return true;
