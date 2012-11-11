@@ -73,28 +73,20 @@ public class Kalkulator {
         }
     }
 
-    public int obliczCzas(List<Symbol> nicA, List<Symbol> nicB) {
-        DoubleMatrix P = DoubleMatrix.eye(R.getColumns());
-        DoubleMatrix T = DoubleMatrix.eye(R.getColumns());
-
-        int t = 1;
-
-        int czasEwolucji = 0;
+    public double obliczCzas(List<Symbol> nicA, List<Symbol> nicB) {
+        double czasEwolucji = 0;
         double maksP = -Double.MAX_VALUE;
 
-        do {
+        for (double t = 0.1; t < 50; t += 0.1) {
+            DoubleMatrix P = MatrixFunctions.expm(R.mul(t));
             double p = oszacujPrawdopodobienstwo(P, nicA, nicB);
+            System.out.println(p);
 
             if (p > maksP) {
                 maksP = p;
                 czasEwolucji = t;
             }
-
-            T = T.mmul(R).div(t);
-            P = P.add(T);
-
-            t++;
-        } while (t < 20);
+        }
 
         return czasEwolucji;
     }

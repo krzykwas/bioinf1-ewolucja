@@ -21,7 +21,7 @@ public class Main {
         Kalkulator kalkulator = new Kalkulator(symbole, prawdopodobienstwa);
 
         wczytajNici(scanner, kalkulator, nicA, nicB);
-        int t = kalkulator.obliczCzas(nicA, nicB);
+        double t = kalkulator.obliczCzas(nicA, nicB);
 
         System.out.println(t);
     }
