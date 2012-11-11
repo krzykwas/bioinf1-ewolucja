@@ -43,8 +43,7 @@ public class Symbol {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 67 * hash + (this.symbol != null ? this.symbol.hashCode() : 0);
-        hash = 67 * hash + (int) (Double.doubleToLongBits(this.prawdopodobienstwo) ^ (Double.doubleToLongBits(this.prawdopodobienstwo) >>> 32));
+        hash = 41 * hash + (this.symbol != null ? this.symbol.hashCode() : 0);
         return hash;
     }
 
@@ -58,9 +57,6 @@ public class Symbol {
         }
         final Symbol other = (Symbol) obj;
         if ((this.symbol == null) ? (other.symbol != null) : !this.symbol.equals(other.symbol)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.prawdopodobienstwo) != Double.doubleToLongBits(other.prawdopodobienstwo)) {
             return false;
         }
         return true;

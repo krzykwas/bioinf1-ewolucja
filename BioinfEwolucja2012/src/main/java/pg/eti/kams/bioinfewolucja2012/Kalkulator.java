@@ -35,10 +35,20 @@ public class Kalkulator {
         }
 
         obliczPrawdopodobienstwoSymboli();
+    }
 
+    public List<Symbol> getSymbole() {
+        return symbole;
+    }
+
+    public Symbol getSymbol(String s) {
         for (Symbol symbol : symbole) {
-            System.out.println(symbol.getPrawdopodobienstwo());
+            if (symbol.getSymbol().equals(s)) {
+                return symbol;
+            }
         }
+
+        return null;
     }
 
     private void dodajSymbol(Symbol symbol) {
@@ -50,8 +60,8 @@ public class Kalkulator {
     }
 
     private void obliczPrawdopodobienstwoSymboli() {
-        DoubleMatrix eR = MatrixFunctions.expm(R);
-        DoubleMatrix column = eR.getColumn(0);
+        DoubleMatrix P = MatrixFunctions.expm(R);
+        DoubleMatrix column = P.getColumn(0);
 
         double suma = 0;
         for (double d : column.data) {
@@ -61,5 +71,44 @@ public class Kalkulator {
         for (int i = 0; i < column.data.length; i++) {
             symbole.get(i).setPrawdopodobienstwo(column.data[i] / suma);
         }
+    }
+
+    public int obliczCzas(List<Symbol> nicA, List<Symbol> nicB) {
+        DoubleMatrix P = DoubleMatrix.eye(R.getColumns());
+        DoubleMatrix T = DoubleMatrix.eye(R.getColumns());
+
+        int t = 1;
+
+        int czasEwolucji = 0;
+        double maksP = -Double.MAX_VALUE;
+
+        do {
+            double p = oszacujPrawdopodobienstwo(P, nicA, nicB);
+
+            if (p > maksP) {
+                maksP = p;
+                czasEwolucji = t;
+            }
+
+            T = T.mmul(R).div(t);
+            P = P.add(T);
+
+            t++;
+        } while (t < 20);
+
+        return czasEwolucji;
+    }
+
+    private double oszacujPrawdopodobienstwo(DoubleMatrix P, List<Symbol> nicA, List<Symbol> nicB) {
+        double p = 0;
+
+        for (int i = 0; i < nicA.size(); i++) {
+            final Symbol xi = nicA.get(i);
+            final Symbol yi = nicB.get(i);
+
+            p += Math.log(xi.getPrawdopodobienstwo() * P.get(reverse.get(yi), reverse.get(xi)));
+        }
+
+        return p;
     }
 }
