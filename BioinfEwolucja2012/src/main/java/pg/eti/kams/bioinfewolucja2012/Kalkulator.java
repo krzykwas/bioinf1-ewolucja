@@ -60,8 +60,22 @@ public class Kalkulator {
     }
 
     private void obliczPrawdopodobienstwoSymboli() {
-        DoubleMatrix P = MatrixFunctions.expm(R);
-        DoubleMatrix column = P.getColumn(0);
+        DoubleMatrix A = MatrixFunctions.expm(R);
+        final double E = 1e-5;
+
+        for (int t = 2; t < 1000; t++) {
+            final DoubleMatrix B = MatrixFunctions.expm(R.mul(t));
+            final DoubleMatrix kolumnaA = A.getColumn(0);
+            final DoubleMatrix kolumnaB = B.getColumn(0);
+
+            if (Math.abs(kolumnaB.distance2(kolumnaA)) < E) {
+                break;
+            } else {
+                A = B;
+            }
+        }
+
+        DoubleMatrix column = A.getColumn(0);
 
         double suma = 0;
         for (double d : column.data) {
@@ -77,7 +91,7 @@ public class Kalkulator {
         double czasEwolucji = 0;
         double maksP = -Double.MAX_VALUE;
 
-        for (double t = 0.1; t < 50; t += 0.1) {
+        for (int t = 1; t < 100; t++) {
             DoubleMatrix P = MatrixFunctions.expm(R.mul(t));
             double p = oszacujPrawdopodobienstwo(P, nicA, nicB);
             System.out.println(p);
