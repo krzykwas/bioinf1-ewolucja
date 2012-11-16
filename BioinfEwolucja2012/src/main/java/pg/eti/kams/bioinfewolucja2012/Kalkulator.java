@@ -86,6 +86,9 @@ public class Kalkulator {
     }
 
     public double obliczCzas(List<Symbol> nicA, List<Symbol> nicB, double x, double y, double krok, List<Double> prawdopodobienstwa) {
+        //Wypisuje macierz potrzebną do symulowania ewolucji
+        System.out.println(MatrixFunctions.expm(R.mul(x)));
+
         double czasEwolucji = 0;
         double maksP = -Double.MAX_VALUE;
 

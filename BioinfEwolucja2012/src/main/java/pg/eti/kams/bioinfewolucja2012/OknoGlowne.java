@@ -26,15 +26,7 @@ public class OknoGlowne extends javax.swing.JFrame {
      */
     public OknoGlowne() {
         initComponents();
-
-        Scanner scanner = new Scanner(System.in);
-        scanner.useLocale(Locale.US);
-
-        wczytajSymbole(scanner.nextLine());
-        double[][] R = wczytajMacierzSzybkosciZmian(scanner, symbole.size());
-        kalkulator = new Kalkulator(symbole, R);
-        wczytajNici(scanner, kalkulator);
-
+        wczytajDane();
         wypiszPrawdopodobienstwaSymboli();
     }
 
@@ -280,5 +272,15 @@ public class OknoGlowne extends javax.swing.JFrame {
         for (Symbol symbol : symbole) {
             System.out.println("Symbol " + symbol.getSymbol() + ": " + symbol.getPrawdopodobienstwo());
         }
+    }
+
+    private void wczytajDane() {
+        Scanner scanner = new Scanner(System.in);
+        scanner.useLocale(Locale.US);
+
+        wczytajSymbole(scanner.nextLine());
+        double[][] R = wczytajMacierzSzybkosciZmian(scanner, symbole.size());
+        kalkulator = new Kalkulator(symbole, R);
+        wczytajNici(scanner, kalkulator);
     }
 }
