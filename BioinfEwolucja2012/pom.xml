@@ -62,7 +62,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>pg.eti.kams.bioinfewolucja2012.Main</mainClass>
+                            <mainClass>pg.eti.kams.bioinfewolucja2012.OknoGlowne</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

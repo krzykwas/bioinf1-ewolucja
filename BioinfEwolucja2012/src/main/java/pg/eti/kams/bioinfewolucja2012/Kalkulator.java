@@ -21,16 +21,16 @@ public class Kalkulator {
     private final Map<Symbol, Integer> reverse = new HashMap<Symbol, Integer>();
     private final DoubleMatrix R = new DoubleMatrix();
 
-    public Kalkulator(List<Symbol> symbole, double[][] prawdopodobienstwa) {
+    public Kalkulator(List<Symbol> symbole, double[][] R) {
         for (Symbol symbol : symbole) {
             dodajSymbol(symbol);
         }
 
-        R.resize(this.symbole.size(), this.symbole.size());
+        this.R.resize(this.symbole.size(), this.symbole.size());
 
-        for (int i = 0; i < prawdopodobienstwa.length; i++) {
-            for (int j = 0; j < prawdopodobienstwa[i].length; j++) {
-                R.put(new int[]{i}, j, prawdopodobienstwa[i][j]);
+        for (int i = 0; i < R.length; i++) {
+            for (int j = 0; j < R[i].length; j++) {
+                this.R.put(new int[]{i}, j, R[i][j]);
             }
         }
 
@@ -65,10 +65,8 @@ public class Kalkulator {
 
         for (int t = 2; t < 1000; t++) {
             final DoubleMatrix B = MatrixFunctions.expm(R.mul(t));
-            final DoubleMatrix kolumnaA = A.getColumn(0);
-            final DoubleMatrix kolumnaB = B.getColumn(0);
 
-            if (Math.abs(kolumnaB.distance2(kolumnaA)) < E) {
+            if (Math.abs(B.distance2(A)) < E) {
                 break;
             } else {
                 A = B;
@@ -87,14 +85,14 @@ public class Kalkulator {
         }
     }
 
-    public double obliczCzas(List<Symbol> nicA, List<Symbol> nicB) {
+    public double obliczCzas(List<Symbol> nicA, List<Symbol> nicB, double x, double y, double krok, List<Double> prawdopodobienstwa) {
         double czasEwolucji = 0;
         double maksP = -Double.MAX_VALUE;
 
-        for (int t = 1; t < 100; t++) {
+        for (double t = x; t < y; t += krok) {
             DoubleMatrix P = MatrixFunctions.expm(R.mul(t));
             double p = oszacujPrawdopodobienstwo(P, nicA, nicB);
-            System.out.println(p);
+            prawdopodobienstwa.add(p);
 
             if (p > maksP) {
                 maksP = p;
